@@ -5,52 +5,59 @@ import java.util.Scanner;
 
 public class Main {
 
-    static int input[] = new int[11];
+    static int input[] = new int[6];
 
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
-        for (int i = 0; i < 11; i++)
+       for (int i = 0; i < 6; i++)
             input[i] = sc.nextInt();
 
+        System.out.println(task1() + "\n" + task23());
     }
 
-    String task1 () {
+    static String task1 () {
 
-        Vector ab = new Vector(input[0], input[1]),
-               bc = new Vector(input[1], input[2]),
-               ac = new Vector(input[0], input[2]);
+        Vector ab = new Vector(input[2] - input[0], input[3] - input[1]),
+               bc = new Vector(input[4] - input[2], input[5] - input[3]),
+               ac = new Vector(input[4] - input[0], input[5] - input[1]);
 
         Vector max = ab, side1 = bc, side2 = ac;
 
-        if(bc.l > max.l) {max = bc; side1 = ab;}
-        if(ac.l > max.l) {max = ac; side2 = ab;}
+        if(Ratio.isBigger(bc.l, max.l)) {max = bc; side1 = ab;}
+        if(Ratio.isBigger(ac.l, max.l)) {max = ac; side2 = ab;}
 
-        if(max.l*max.l == side1.l*side1.l + side2.l*side2.l) return "Right";
+        if(Ratio.eguals(Ratio.mult(max.l, max.l), Ratio.sum(Ratio.mult(side1.l, side1.l), Ratio.mult(side2.l, side2.l)))) return "Right";
         if(Vector.multiply(side1, side2) > 0) return "Thin";
         if(Vector.multiply(side1, side2) < 0) return "Thick";
         return "Common";
     }
 
-    String task23 ()
+    static String task23 ()
     {
-        Vector ab = new Vector(input[0], input[1]),
-                bc = new Vector(input[1], input[2]),
-                ac = new Vector(input[0], input[2]);
+        Vector ab = new Vector(input[2] - input[0], input[3] - input[1]),
+               bc = new Vector(input[4] - input[2], input[5] - input[3]),
+               ac = new Vector(input[4] - input[0], input[5] - input[1]);
 
         Vector max = ab, side1 = bc, side2 = ac;
 
-        if(bc.l > max.l) {max = bc; side1 = ab;}
-        if(ac.l > max.l) {max = ac; side2 = ab;}
+        if(Ratio.isBigger(bc.l, max.l)) {max = bc; side1 = ab;}
+        if(Ratio.isBigger(ac.l, max.l)) {max = ac; side2 = ab;}
 
-        double sin = Math.sqrt(1 - Math.sqrt(1 - Math.pow(Vector.multiply(side1, side2)/(side1.l*side2.l), 2)));
+        Ratio sin2 = Ratio.ded(new Ratio(1,1,1,1),
+                Ratio.mult(Ratio.div(new Ratio(Vector.multiply(side1, side2), 1, 1, 1), (Ratio.mult(side1.l,side2.l))),
+                        Ratio.div(new Ratio(Vector.multiply(side1, side2), 1, 1, 1), (Ratio.mult(side1.l,side2.l)))));
+        Ratio sin = new Ratio(sin2.n, sin2.m);
 
-        return "" + Vector.multiply(side1, side2) + "/" + side1.l*side2.l + "\n" + 0.5*side1.l*side2.l*sin;
+        Ratio cos = Ratio.div(new Ratio(Vector.multiply(side1, side2), 1, 1, 1), (Ratio.mult(side1.l,side2.l)));
+
+        Ratio sqr = Ratio.mult(Ratio.mult(new Ratio(1, 2, 1, 1), sin), Ratio.mult(side1.l, side2.l));
+        return cos + "\n" + sqr;
     }
 
-    String task4 ()
+    static String task4 ()
     {
-
+        return null;
     }
 }
