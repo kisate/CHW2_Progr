@@ -6,6 +6,9 @@ import java.util.Scanner;
 public class Main {
 
     static int input[] = new int[11];
+    static Point A, B, C, D, K, Z, M;
+    static Vector AB, BC, CD, DA, BD, BM, CK, AC;
+
 
     public static void main(String[] args) {
 
@@ -14,43 +17,62 @@ public class Main {
         for (int i = 0; i < 11; i++)
             input[i] = sc.nextInt();
 
+        A = new Point(input[0], input[1]);
+        B = new Point(input[2], input[3]);
+        C = new Point(input[4], input[5]);
+        D = new Point(input[6], input[7]);
+        AB = new Vector(A, B);
+        BC = new Vector(B, C);
+        AC = new Vector(A, C);
+        CK = Vector.multiply(AB, input[8]);
+        BD = new Vector(B, D);
+        BM = Vector.multiply(BD, input[9]/ input[10]);
+
+        System.out.println(Vector.multiply(AB, BC));
+
+        task1();
+        task23();
+
     }
 
-    String task1 () {
+    static void task1 () {
 
-        Vector ab = new Vector(input[0], input[1]),
-               bc = new Vector(input[1], input[2]),
-               ac = new Vector(input[0], input[2]);
+        Vector max = AB, side1 = BC, side2 = AC;
 
-        Vector max = ab, side1 = bc, side2 = ac;
+        if(BC.l > max.l) {side1 = max; max = BC;}
+        if(AC.l > max.l) {side2 = max; max = AC;}
 
-        if(bc.l > max.l) {max = bc; side1 = ab;}
-        if(ac.l > max.l) {max = ac; side2 = ab;}
+        if(!Point.equals(side1.begin, side2.begin)) side2 = Vector.multiply(side2, -1);
 
-        if(max.l*max.l == side1.l*side1.l + side2.l*side2.l) return "Right";
-        if(Vector.multiply(side1, side2) > 0) return "Thin";
-        if(Vector.multiply(side1, side2) < 0) return "Thick";
-        return "Common";
+        System.out.printf(side1 + "\n" + side2 + "\n" + max);
+
+        String output = "";
+
+        if(max.x*max.x +  max.y*max.y == side1.x*side1.x + side1.y*side1.y + side2.x*side2.x + side2.y*side2.y) output =  "Right";
+        if(Vector.multiply(side1, side2) > 0) output = "Thin";
+        if(Vector.multiply(side1, side2) < 0) output = "Thick";
+
+        System.out.println(output + "\n");
     }
 
-    String task23 ()
+    static void task23 ()
     {
-        Vector ab = new Vector(input[0], input[1]),
-                bc = new Vector(input[1], input[2]),
-                ac = new Vector(input[0], input[2]);
+        Vector max = AB, side1 = BC, side2 = AC;
 
-        Vector max = ab, side1 = bc, side2 = ac;
+        if(BC.l > max.l) {side1 = max; max = BC;}
+        if(AC.l > max.l) {side2 = max; max = AC;}
 
-        if(bc.l > max.l) {max = bc; side1 = ab;}
-        if(ac.l > max.l) {max = ac; side2 = ab;}
+        if(!Point.equals(side1.begin, side2.begin)) side2 = Vector.multiply(side2, -1);
 
-        double sin = Math.sqrt(1 - Math.sqrt(1 - Math.pow(Vector.multiply(side1, side2)/(side1.l*side2.l), 2)));
+        double sin = Math.sqrt(1 - Math.pow(Vector.multiply(side1, side2)/(side1.l*side2.l), 2));
 
-        return "" + Vector.multiply(side1, side2) + "/" + side1.l*side2.l + "\n" + 0.5*side1.l*side2.l*sin;
+        System.out.println( "" + Vector.multiply(side1, side2) / side1.l*side2.l + "\n" + 0.5*side1.l*side2.l*sin + "\n");
     }
 
     String task4 ()
     {
-
+        K = new Point(C.x + CK.x, C.y + CK.y);
+        Vector OZ = Vector.sum();
+        return "";
     }
 }
